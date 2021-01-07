@@ -23,5 +23,14 @@ void loop(){
       Serial.print(": ");
       Serial.println(key, HEX);
   }
+  
+  uint8_t key_byte = 0;
+  key_byte = mcp.gpioRegisterReadByte(MCP23S17_GPIO);
+  Serial.print("A: ");
+  Serial.println(key_byte, HEX);
+  key_byte = mcp.gpioRegisterReadByte(MCP23S17_GPIO + 1);
+  Serial.print("B: ");
+  Serial.println(key_byte, HEX);
+
   delay(1000);
 }
