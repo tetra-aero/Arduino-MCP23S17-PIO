@@ -1,19 +1,27 @@
 #include <Arduino.h>
+#include <SPI.h>
+#include <gpio_MCP23S17.h>   // import library
 
-// for ESP32 devkit v4
-#define LED_BUILTIN 2
+#define GPIO_ADRS          0x20//SPI
+
+const uint8_t gpio_cs_pin = 5; //VSPI
+
+gpio_MCP23S17 mcp(gpio_cs_pin, GPIO_ADRS);//using transactions?
 
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-    //Serial.begin(9600);
-    Serial.begin(57600);
+  Serial.begin(57600);
+  mcp.begin();//it will initialize SPI as well
+  mcp.gpioPinMode(INPUT);
 }
- 
-void loop() {
-    digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("LED On!!"); 
-    delay(1000); 
-    digitalWrite(LED_BUILTIN, LOW); 
-    Serial.println("LED Off!!");
-    delay(1000); 
+
+void loop(){
+  unsigned int key = 0;
+  for (int i = 0; i < 16; i++)
+  {
+      key = mcp.gpioDigitalRead(i);
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.println(key, HEX);
+  }
+  delay(1000);
 }
